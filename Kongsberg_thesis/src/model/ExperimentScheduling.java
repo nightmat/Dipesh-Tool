@@ -1,6 +1,8 @@
 package model;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -37,6 +39,8 @@ public class ExperimentScheduling {
 	private ListTestCasesPage listTestCasesPage;
 	
 	private GetTestCasesQueries testCasesQueries;
+	
+	private File fileName;
 
 	public double getTotal() {
 		return total;
@@ -150,16 +154,32 @@ public class ExperimentScheduling {
 		testCasesQueries = new GetTestCasesQueries();
 	}
 	
+	public void createFile() throws Exception{
+		fileName = new File("C:\\Personal\\practice\\files\\test.txt");
+		
+
+		// if file does not exists, then create it
+		if (!fileName.exists()) {
+			fileName.createNewFile();
+		}
+	}
+	
 	public ArrayList<TestCase> getValues_1() throws Exception {
+		createFile();
+		
+		FileWriter fw = new FileWriter(fileName.getAbsoluteFile());
+		file = new BufferedWriter(fw);
+		
+		
 		Search[] s = new Search[] { new simula.oclga.AVM(),
 				new simula.oclga.SSGA(100, 0.75), new simula.oclga.OpOEA(),
 				new simula.oclga.RandomSearch() };
-		String[] s_name = new String[] { "(1+1)EA" };
+		String[] s_name = new String[] { "AVM", "GA", "(1+1)EA", "RS" };
 		ArrayList<TestCase> tempCaseList = new ArrayList<TestCase>();
 		int counter=0;
 		double fitnessValue=1;
 		
-		for (int sea = 0; sea < 1; sea++) {
+		for (int sea = 0; sea < 4; sea++) {
 			for (int K = 0; K < 100; K++) {	
 				problemScheduling = new ProblemScheduling();
 				problemScheduling.setTestCaseList(testCaseList);
@@ -175,12 +195,14 @@ public class ExperimentScheduling {
 				problemScheduling.setEconsequence(econsequence);
 				problemScheduling.setMax(counter);
 					
-				s[sea].setMaxIterations(5000);
+				s[sea].setMaxIterations(50000);
 				Search.validateConstraints(problemScheduling);
 				int[] v_1 = s[sea].search(problemScheduling);
 					
 				//System.out.println("max is " + K + " "+ problemScheduling.getMax());
 			
+				file.write(problemScheduling.getInitalFitnessValue() + "\t"); //
+				
 				if (counter<=problemScheduling.getMax()){
 					counter=problemScheduling.getMax();
 					//System.out.println("counter is  is " + K+ " " +counter);
@@ -196,8 +218,8 @@ public class ExperimentScheduling {
 					}
 				}			
 					//file.write(df.format(m) + "\t"); //		
-			//	file.write("\r");
-			//	file.flush();
+				file.write("\r");
+				file.flush();
 			}		
 		return tempCaseList;
 	}

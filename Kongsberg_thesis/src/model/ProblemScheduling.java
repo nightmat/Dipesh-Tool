@@ -228,9 +228,13 @@ public class ProblemScheduling implements Problem{
 
 		time = 1-Nor(Math.abs(temptime-timeBudget));
 		
+		
 		//calculate fitness function
 		tm =1- (priority*overallPriority + probability*overallProbability + consequence*overallConsequence + 0.3*time + risk*overallRisk +
 				epriority*overallEPriority + eprobability*overallEProbability + econsequence*overallEConsequence)/1.3;
+		
+		if (tm<0)
+			System.out.println("Good");
 		
 		if (initalFitnessValue>tm && count != 0 ){
 			initalFitnessValue=tm;

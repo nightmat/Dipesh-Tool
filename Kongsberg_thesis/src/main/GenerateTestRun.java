@@ -12,16 +12,17 @@ public class GenerateTestRun {
 	
 	public static void main(String[] args) {
 		databaseConnection.connect();
-	//	generateRuns();
+		//generateRuns();
 	
 	}
 	
 	
 	public static void generateRuns(){
-		for (int i=101;i<401;i++){
-			sqlCode("testrun",i,6,2,2);
-			
-		}
+		for (int j=80;j<90;j++)
+			for (int i=101;i<400;i++){
+				sqlCode("testrun",i,j,3,3);
+				
+			}
 		
 	}
 	
