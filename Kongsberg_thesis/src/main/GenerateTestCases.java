@@ -1,11 +1,18 @@
 package main;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.sql.SQLException;
 import java.util.Random;
 
+import model.Consequence;
+import model.Context;
 import model.Effect;
+import model.ModelConstraint;
 import model.Priority;
+import model.Probability;
+import model.RCUType;
 import model.TestCase;
 import database.DatabaseConnection;
 
@@ -14,11 +21,11 @@ public class GenerateTestCases {
 	public static DatabaseConnection databaseConnection = new DatabaseConnection();
 	public static TestCase testCase[] = new TestCase[2000];
 	private static File fileName;
+	private static BufferedWriter file;
 	
-	public static void main(String[] args) {
-		databaseConnection.connect();
-		//generateRuns();
-	
+	public static void main(String[] args) throws Exception {
+		addCase();
+		addInfo();
 	}
 	
 	
@@ -28,16 +35,68 @@ public class GenerateTestCases {
 	}
 	
 	public static void addCase(){
-		int min=1, max1= 3, max2 = 5;
+		int min=1, maxPriority =5, maxProbability =3, maxConsequence =5, maxTime=8, maxContext =2, maxComponent =5, maxConstraint =5, maxEffect =8;
+		
 		for (int i=0;i<2000;i++){
 			Priority priority = new Priority();
+			Probability probability = new Probability();
+			Consequence consequence = new Consequence();
+			Context context = new Context();
+			RCUType rcuType = new RCUType();
+			ModelConstraint modelConstraint = new ModelConstraint();
+			Effect effect = new Effect();
+			
 			testCase[i] = new TestCase();
-			testCase[i].setCaseName("Case "+i);
-			int num2 = randInt(min,max2);
-			priority.setName(returnName2(num2));
+			testCase[i].setCaseName("Case"+i);
+			
+			int numPriority = randInt(min,maxPriority);
+			priority.setName(returnNamePriority(numPriority));
 			testCase[i].setPriority(priority);
 			
+			int numProbability	= randInt (min,maxProbability);
+			probability.setName(returnNameProbability(numProbability));
+			testCase[i].setProbability(probability);
+			
+			int numConsequence	= randInt (min,maxConsequence);
+			consequence.setName(returnNameConsequence(numConsequence));
+			testCase[i].setConsequence(consequence);
+			
+			int time = randInt (min,maxTime);
+			testCase[i].setTimeExecution(time);
+			
+			int numContext= randInt(min,maxContext);
+			context.setName(returnNameContext(numContext));
+			testCase[i].setContext(context);
+			
+			int numComponent= randInt(min,maxComponent);
+			rcuType.setName(returnNameComponent(numComponent));
+			testCase[i].setRcuType(rcuType);
+			
+			int numConstraint	= randInt (min,maxConstraint);
+			modelConstraint.setName(returnNameConstraint(numConstraint));
+			testCase[i].setModelConstraint(modelConstraint);
+			
+			int numEffect	= randInt (min,maxEffect);
+			effect.setName(returnNameEffect(numEffect));
+			testCase[i].setEffect(effect);
+
 		}
+	}
+	
+	public static void addInfo() throws Exception{
+		createFile();
+		
+		FileWriter fw = new FileWriter(fileName.getAbsoluteFile());
+		file = new BufferedWriter(fw);
+		
+		for (int i=0;i<2000;i++){
+			file.write(i+ "\t" + testCase[i].getCaseName()+ "\t" + testCase[i].getPriority().getName()+ "\t" + testCase[i].getProbability().getName()
+					+ "\t" + testCase[i].getConsequence().getName()+ "\t" + testCase[i].getTimeExecution()+ "\t" + testCase[i].getContext().getName()+ "\t" + 
+					testCase[i].getRcuType().getName()+ "\t" + testCase[i].getModelConstraint().getName()+ "\t"  + testCase[i].getEffect().getName() + "\n"); //
+			
+		}
+		
+		file.flush();
 	}
 	
 	
@@ -50,40 +109,112 @@ public class GenerateTestCases {
 			value = "fail";
 		else if (num==3)
 			value = "undecided";
-		
-		
-		
+			
 	}
 	
-	public static String returnName1(int value){
-		String name1 = null;
+	public static String returnNamePriority(int value){
+		String namePriority = null;
 		if (value ==1)
-			name1 = "high";
+			namePriority = "higher";
 		else if (value ==2)
-			name1 = "medium";
+			namePriority = "high";
 		else if (value==3)
-			name1 = "low";
-		
-		return name1;
+			namePriority = "medium";
+		else if (value ==4)
+			namePriority = "low";
+		else if (value==5)
+			namePriority = "lower";
+		return namePriority;
 	}
 	
-	public static String returnName2(int value){
-		String name1 = null;
+	public static String returnNameProbability(int value){
+		String returnNameProbability = null;
 		if (value ==1)
-			name1 = "higher";
+			returnNameProbability = "high";
 		else if (value ==2)
-			name1 = "high";
+			returnNameProbability = "medium";
 		else if (value==3)
-			name1 = "medium";
-		else if (value ==2)
-			name1 = "low";
-		else if (value==3)
-			name1 = "lower";
-		return name1;
+			returnNameProbability = "low";
+		
+		return returnNameProbability;
 	}
 	
-	public void createFile() throws Exception{
-		fileName = new File("C:\\Personal\\practice\\files\\test.txt");
+	public static String returnNameConsequence(int value){
+		String returnNameConsequence = null;
+		if (value ==1)
+			returnNameConsequence = "high";
+		else if (value ==2)
+			returnNameConsequence = "medium";
+		else if (value==3)
+			returnNameConsequence = "low";
+		
+		return returnNameConsequence;
+	}
+
+	
+	public static String returnNameContext(int value){
+		String nameContext = null;
+		if (value ==1)
+			nameContext = "internal";
+		else if (value ==2)
+			nameContext = "external";
+
+		return nameContext;
+	}
+	
+	public static String returnNameComponent(int value){
+		String nameComponent = null;
+		if (value ==1)
+			nameComponent = "RCU500";
+		else if (value ==2)
+			nameComponent = "RCU510";
+		else if (value==3)
+			nameComponent = "RCU501";
+		else if (value ==4)
+			nameComponent = "RCU502";
+		else if (value==5)
+			nameComponent = "RCU602";
+		return nameComponent;
+	}
+	
+	public static String returnNameConstraint(int value){
+		String nameConstraint = null;
+		if (value ==1)
+			nameConstraint = "Temperature Operation";
+		else if (value ==2)
+			nameConstraint = "Power Supply";
+		else if (value==3)
+			nameConstraint = "Nominal Current";
+		else if (value ==4)
+			nameConstraint = "Power Consumption";
+		else if (value==5)
+			nameConstraint = "Heat Dissipation";
+		return nameConstraint;
+	}
+	
+	public static String returnNameEffect(int value){
+		String nameEffect = null;
+		if (value ==1)
+			nameEffect = "functionality";
+		else if (value ==2)
+			nameEffect = "usability";
+		else if (value==3)
+			nameEffect = "security";
+		else if (value ==4)
+			nameEffect = "performance";
+		else if (value==5)
+			nameEffect = "serviceability";
+		else if (value==6)
+			nameEffect = "robustness";
+		else if (value ==7)
+			nameEffect = "environment";
+		else if (value==8)
+			nameEffect = "other";
+		return nameEffect;
+	}
+	
+	public static void createFile() throws Exception{
+		fileName = new File("C:\\Personal\\practice\\files\\case.txt");
 		
 
 		// if file does not exists, then create it

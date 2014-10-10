@@ -6,12 +6,13 @@ import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import main.ReadTestCasesArtificialData;
 import database.DatabaseConnection;
 import database.GetTestCasesQueries;
 import simula.oclga.Search;
 import view.ListTestCasesPage;
 
-public class ExperimentScheduling {
+public class ExperimentSchedulingArtificialData {
 
 	private DecimalFormat df;
 	private BufferedWriter file;
@@ -38,7 +39,7 @@ public class ExperimentScheduling {
 	private ArrayList<TestCase> testCaseList;
 	private ListTestCasesPage listTestCasesPage;
 	
-	private GetTestCasesQueries testCasesQueries;
+	private ReadTestCasesArtificialData readTestCasesArtificialData;
 	
 	private File fileName;
 
@@ -146,12 +147,12 @@ public class ExperimentScheduling {
 		this.databaseConnection = databaseConnection;
 	}
 
-	public ExperimentScheduling(){
+	public ExperimentSchedulingArtificialData(){
 		df = new DecimalFormat("0.000");
 		loopNum = 100;
 		
 		listTestCasesPage = new ListTestCasesPage();
-		testCasesQueries = new GetTestCasesQueries();
+		readTestCasesArtificialData = new ReadTestCasesArtificialData();
 	}
 	
 	public void createFile() throws Exception{
@@ -314,8 +315,8 @@ public class ExperimentScheduling {
 	}
 
 	public void getTestCases(){
-		testCasesQueries.setDatabaseConnection(databaseConnection);
-		testCaseList= testCasesQueries.getTestCaseContents(context, component, constraint, effect);
+		readTestCasesArtificialData.readFile();
+		testCaseList= readTestCasesArtificialData.getTestCaseContents(2000,context, component, constraint, effect);
 		
 		jobsMax = testCaseList.size();
 		jobsMin = 0;

@@ -13,6 +13,7 @@ import controller.MainPageController;
 import model.Context;
 import model.Effect;
 import model.ExperimentScheduling;
+import model.ExperimentSchedulingArtificialData;
 import model.ModelConstraint;
 import model.Priority;
 import model.Probability;
@@ -57,7 +58,7 @@ public class TestCaseSelectionPage {
 	private RCUTypeQueries rcuTypeQueries;
 	private OptimizeQueries optimizeQueries;
 	
-	private JButton btnCancel, btnDefaultConfiguration, btnOptimizeCases, btnOptimize;
+	private JButton btnCancel, btnDefaultConfiguration, btnOptimizeCases, btnOptimize, btnOptimizeArtificial;
 	private JComboBox comboBoxEffect, comboBoxContext, comboBoxModel, comboBoxComponent, comboBoxModelConstraint;
 	private JSlider sliderPriority, sliderProbability, sliderConsequence, sliderEPriority, sliderEProbability, sliderEConsequence, sliderRisk ;
 	
@@ -69,6 +70,7 @@ public class TestCaseSelectionPage {
 	private SelectionTestCasesPage selectionTestCasesPage;
 	private ListTestCasesPage listTestCasesPage;
 	private ExperimentScheduling experimentScheduling;
+	private ExperimentSchedulingArtificialData experimentSchedulingArtificialData;
 	private JLabel lblConsequence;
 	private JLabel lblEfficiencyPriority;
 	private JLabel lblEfficiencyProbability;
@@ -120,6 +122,7 @@ public class TestCaseSelectionPage {
 
 		listTestCasesPage = new ListTestCasesPage();
 		experimentScheduling = new ExperimentScheduling();
+		experimentSchedulingArtificialData = new ExperimentSchedulingArtificialData();
 	}
 
 	/**
@@ -168,24 +171,24 @@ public class TestCaseSelectionPage {
 		frame.getContentPane().add(label_2);
 		
 		JLabel label_3 = new JLabel("Component Under Test");
-		label_3.setBounds(475, 465, 140, 14);
+		label_3.setBounds(474, 465, 140, 14);
 		frame.getContentPane().add(label_3);
 		
 		comboBoxComponent = new JComboBox();
-		comboBoxComponent.setBounds(676, 467, 175, 20);
+		comboBoxComponent.setBounds(676, 462, 175, 20);
 		frame.getContentPane().add(comboBoxComponent);
 		
 		JLabel label_4 = new JLabel("Feature");
-		label_4.setBounds(475, 538, 97, 14);
+		label_4.setBounds(475, 527, 97, 14);
 		frame.getContentPane().add(label_4);
 		
 		comboBoxModelConstraint = new JComboBox();
-		comboBoxModelConstraint.setBounds(676, 535, 175, 20);
+		comboBoxModelConstraint.setBounds(676, 524, 175, 20);
 		frame.getContentPane().add(comboBoxModelConstraint);
 		
 		btnCancel = new JButton("Cancel");
 		
-		btnCancel.setBounds(268, 610, 120, 23);
+		btnCancel.setBounds(227, 610, 120, 23);
 		frame.getContentPane().add(btnCancel);
         Font font = new Font("Serif", Font.ITALIC, 15);
 		
@@ -216,7 +219,7 @@ public class TestCaseSelectionPage {
         sliderProbability.setFont(font);
         
 		btnDefaultConfiguration = new JButton("Default configuration");
-		btnDefaultConfiguration.setBounds(472, 610, 175, 23);
+		btnDefaultConfiguration.setBounds(397, 610, 175, 23);
 		frame.getContentPane().add(btnDefaultConfiguration);
 		
 		JLabel lblEffect = new JLabel("Type of Tests");
@@ -307,6 +310,10 @@ public class TestCaseSelectionPage {
 		sliderRisk.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 		sliderRisk.setBounds(199, 317, 200, 96);
 		frame.getContentPane().add(sliderRisk);
+		
+		btnOptimizeArtificial = new JButton("Optimize from artificial data");
+		btnOptimizeArtificial.setBounds(633, 610, 218, 23);
+		frame.getContentPane().add(btnOptimizeArtificial);
 		
 		
 	}
@@ -419,6 +426,65 @@ public class TestCaseSelectionPage {
 				experimentScheduling.setEconsequence(econsequence);
 	
 				tempCaseList=experimentScheduling.run();
+				
+				listTestCasesPage.listCostCases(tempCaseList);
+				listTestCasesPage.frame.setVisible(true);
+			}
+		});
+		
+		btnOptimizeArtificial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				double time, priority, probability, consequence, risk, epriority, eprobability, econsequence;
+				String context, component, constraint, effect;
+				
+				context =comboBoxContext.getSelectedItem().toString();
+				component =comboBoxComponent.getSelectedItem().toString();
+				constraint =comboBoxModelConstraint.getSelectedItem().toString();
+				effect =comboBoxEffect.getSelectedItem().toString();
+				
+				
+				if (textTime.getText().equals(""))
+						time = 0;
+				else
+					time = Integer.parseInt(textTime.getText());
+			//	context = sliderContext.getValue();
+				priority = sliderPriority.getValue();
+				probability = sliderProbability.getValue();
+				consequence = sliderConsequence.getValue();
+				epriority = sliderEPriority.getValue();
+				eprobability = sliderEConsequence.getValue();
+				econsequence = sliderEConsequence.getValue();
+				risk = sliderRisk.getValue();
+				
+				double total = priority + probability + consequence + risk + epriority + eprobability + econsequence;
+				priority = priority/total;
+				probability = probability/total;
+				consequence = consequence/total;
+				risk = risk/total;
+				epriority = epriority/total;
+				eprobability = eprobability/total;
+				econsequence = econsequence/total;
+
+				
+				ArrayList<TestCase> tempCaseList = new ArrayList<TestCase>();
+				frame.dispose();
+				experimentSchedulingArtificialData.setMaxTime(time);
+				//experimentScheduling.setContext(context);
+				experimentSchedulingArtificialData.setPriority(priority);
+				experimentSchedulingArtificialData.setProbability(probability);
+				experimentSchedulingArtificialData.setConsequence(consequence);
+				experimentSchedulingArtificialData.setContext(context);
+				experimentSchedulingArtificialData.setComponent(component);
+				experimentSchedulingArtificialData.setConstraint(constraint);
+				experimentSchedulingArtificialData.setEffect(effect);
+				experimentSchedulingArtificialData.setTotal(total);
+				
+				experimentSchedulingArtificialData.setRisk(risk);
+				experimentSchedulingArtificialData.setEpriority(epriority);
+				experimentSchedulingArtificialData.setEprobability(eprobability);
+				experimentSchedulingArtificialData.setEconsequence(econsequence);
+	
+				tempCaseList=experimentSchedulingArtificialData.run();
 				
 				listTestCasesPage.listCostCases(tempCaseList);
 				listTestCasesPage.frame.setVisible(true);
