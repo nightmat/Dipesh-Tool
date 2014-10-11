@@ -15,6 +15,7 @@ import model.ModelConstraint;
 import model.Priority;
 import model.Probability;
 import model.RCUType;
+import model.Risk;
 import model.TestCase;
 
 public class GetTestCasesQueries {
@@ -44,24 +45,24 @@ public class GetTestCasesQueries {
 		//String selectContext= "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime from testcase ORDER BY id";
 		String selectContext, selectComponent, selectConstraint, selectEffect;
 		if (context2.isEmpty())
-			 selectContext = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase";
+			 selectContext = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase";
 		else
-			 selectContext = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase where context in ('" + context2 + "')";
+			 selectContext = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase where context in ('" + context2 + "')";
 		
 		if (component.isEmpty())
-			 selectComponent = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase";
+			 selectComponent = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase";
 		else
-			 selectComponent = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase where componentname in ('" + component + "')";
+			 selectComponent = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase where componentname in ('" + component + "')";
 			
 		if (constraint.isEmpty())
-			 selectConstraint = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase";
+			 selectConstraint = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase";
 		else
-			 selectConstraint = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase where modelconstraint in ('" + constraint + "')";
+			 selectConstraint = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase where modelconstraint in ('" + constraint + "')";
 			
 		if (effect2.isEmpty())
-			 selectEffect = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase";
+			 selectEffect = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase";
 		else
-			 selectEffect = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence from testcase where effect in ('" + effect2 + "')";
+			 selectEffect = "SELECT id,name,purpose,priority,probability,effect,context, model,componentname,modelconstraint,executiontime,consequence,risk from testcase where effect in ('" + effect2 + "')";
 		
 		String selectQuery= selectContext + " intersect " + selectComponent + " intersect " + selectConstraint + " intersect " + selectEffect + " ORDER BY ID";
 		resultSet = databaseConnection.queryTable(selectQuery);
@@ -81,6 +82,7 @@ public class GetTestCasesQueries {
 				RCUType rcuType = new RCUType();
 				ModelConstraint modelConstraint = new ModelConstraint();
 				Consequence consequence = new Consequence();
+				Risk risk = new Risk();
 				
 				testCase.setId(Integer.parseInt(resultSet.getString("id")));
 				testCase.setCaseName(resultSet.getString("name"));
@@ -93,6 +95,7 @@ public class GetTestCasesQueries {
 				rcuType.setName(resultSet.getString("componentname"));
 				modelConstraint.setName(resultSet.getString("modelConstraint"));
 				consequence.setName(resultSet.getString("consequence"));
+				risk.setName(resultSet.getString("risk"));
 				
 				//testCaseList.add(testCase);
 				try{
@@ -110,6 +113,8 @@ public class GetTestCasesQueries {
 				testCase.setModelConstraint(modelConstraint);
 				testCase.setTimeExecution(executionTime);
 				testCase.setConsequence(consequence);
+				testCase.setRisk(risk);
+				
 				
 				testCaseList.add(testCase);
 			}

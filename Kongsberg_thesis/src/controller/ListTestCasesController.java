@@ -44,14 +44,14 @@ public class ListTestCasesController {
 	
 	
 	public void showAllCases(DatabaseConnection databaseConnection){		
-		String selectCases= "SELECT id, name, purpose, priority, probability, consequence, executiontime, model, componentname, modelconstraint from testcase ORDER BY ID";
+		String selectCases= "SELECT id, name, purpose, priority, probability, consequence, risk, executiontime, model, componentname, modelconstraint from testcase ORDER BY ID";
 		resultSet = databaseConnection.queryTable(selectCases);
 		
 		showCases(resultSet);
 	}
 	
 	public void showAllResultCases(DatabaseConnection databaseConnection){		
-		String selectCases= "SELECT id, name, purpose, priority, probability, consequence,executiontime, result from testcase ORDER BY ID";
+		String selectCases= "SELECT id, name, purpose, priority, probability, consequence,risk, executiontime, result from testcase ORDER BY ID";
 		resultSet = databaseConnection.queryTable(selectCases);
 		
 		showResultCases(resultSet);
@@ -86,6 +86,13 @@ public class ListTestCasesController {
 		showCases(resultSet);
 	}
 	
+	
+	public void showRiskCases(DatabaseConnection databaseConnection, String risk){		
+		String selectCases= "SELECT id, name, purpose, priority, probability, consequence,executiontime, model, componentname, modelconstraint from testcase where risk = '"+ risk + "' ORDER BY ID";
+		resultSet = databaseConnection.queryTable(selectCases);
+		
+		showCases(resultSet);
+	}
 	public void showComponentCases(DatabaseConnection databaseConnection, String componentname){		
 		String selectCases= "SELECT id, name, purpose, priority, probability, consequence,executiontime, model, componentname, modelconstraint from testcase where componentname = '"+ componentname + "' ORDER BY ID";
 		resultSet = databaseConnection.queryTable(selectCases);
@@ -109,6 +116,7 @@ public class ListTestCasesController {
 		columnNames.addElement("Priority");
 		columnNames.addElement("Probability");
 		columnNames.addElement("Consequence");
+		columnNames.addElement("Risk");
 		columnNames.addElement("Execution Time");
 		columnNames.addElement("Model");
 		columnNames.addElement("Component");
@@ -146,6 +154,7 @@ public class ListTestCasesController {
 		columnNames.addElement("Priority");
 		columnNames.addElement("Probability");
 		columnNames.addElement("Consequence");
+		columnNames.addElement("Risk");
 		columnNames.addElement("Execution Time");
 		columnNames.addElement("Result");
 

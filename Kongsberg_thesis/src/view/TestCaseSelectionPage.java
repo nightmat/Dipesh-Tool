@@ -58,7 +58,7 @@ public class TestCaseSelectionPage {
 	private RCUTypeQueries rcuTypeQueries;
 	private OptimizeQueries optimizeQueries;
 	
-	private JButton btnCancel, btnDefaultConfiguration, btnOptimizeCases, btnOptimize, btnOptimizeArtificial;
+	private JButton btnCancel, btnDefaultConfiguration, btnOptimizeCases, btnOptimize, btnOptimizeArtificial, btnCalculateRisk;
 	private JComboBox comboBoxEffect, comboBoxContext, comboBoxModel, comboBoxComponent, comboBoxModelConstraint;
 	private JSlider sliderPriority, sliderProbability, sliderConsequence, sliderEPriority, sliderEProbability, sliderEConsequence, sliderRisk ;
 	
@@ -315,6 +315,10 @@ public class TestCaseSelectionPage {
 		btnOptimizeArtificial.setBounds(633, 610, 218, 23);
 		frame.getContentPane().add(btnOptimizeArtificial);
 		
+		btnCalculateRisk = new JButton("Calculate risk");
+		btnCalculateRisk.setBounds(274, 570, 172, 23);
+	//	frame.getContentPane().add(btnCalculateRisk);
+		
 		
 	}
 	
@@ -484,6 +488,7 @@ public class TestCaseSelectionPage {
 				experimentSchedulingArtificialData.setEprobability(eprobability);
 				experimentSchedulingArtificialData.setEconsequence(econsequence);
 	
+				
 				tempCaseList=experimentSchedulingArtificialData.run();
 				
 				listTestCasesPage.listCostCases(tempCaseList);
@@ -517,6 +522,13 @@ public class TestCaseSelectionPage {
 		btnOptimizeCases.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				optimizeQueries.calculate(databaseConnection);
+				
+			}
+		});
+		
+		btnCalculateRisk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				optimizeQueries.calculateRisk(databaseConnection);
 				
 			}
 		});

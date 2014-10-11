@@ -195,7 +195,7 @@ public class ExperimentSchedulingArtificialData {
 				problemScheduling.setEconsequence(econsequence);
 				problemScheduling.setMax(counter);
 					
-				s[sea].setMaxIterations(2000);
+				s[sea].setMaxIterations(5000);
 				Search.validateConstraints(problemScheduling);
 				int[] v_1 = s[sea].search(problemScheduling);
 					
@@ -238,7 +238,7 @@ public class ExperimentSchedulingArtificialData {
 		int counter=0;
 		double fitnessValue=1;
 		for (int sea = 0; sea < 1; sea++) {
-			for (int K = 0; K < 100; K++) {	
+			for (int K = 0; K < 30; K++) {	
 				problemSchedulingSimple = new ProblemSchedulingSimple();
 			
 				problemSchedulingSimple.setTestCaseList(testCaseList);
@@ -247,7 +247,7 @@ public class ExperimentSchedulingArtificialData {
 				problemSchedulingSimple.setTimeBudget(maxTime);			
 				problemSchedulingSimple.calculate();
 	
-				s[sea].setMaxIterations(2000);
+				s[sea].setMaxIterations(5000);
 				Search.validateConstraints(problemSchedulingSimple);
 				int[] v_1 = s[sea].search(problemSchedulingSimple);
 				
@@ -316,7 +316,7 @@ public class ExperimentSchedulingArtificialData {
 
 	public void getTestCases(){
 		readTestCasesArtificialData.readFile();
-		testCaseList= readTestCasesArtificialData.getTestCaseContents(2000,context, component, constraint, effect);
+		testCaseList= readTestCasesArtificialData.getTestCaseContents(1000,context, component, constraint, effect);
 		
 		jobsMax = testCaseList.size();
 		jobsMin = 0;

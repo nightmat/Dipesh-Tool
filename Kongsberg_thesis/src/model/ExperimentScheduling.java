@@ -250,7 +250,7 @@ public class ExperimentScheduling {
 				Search.validateConstraints(problemSchedulingSimple);
 				int[] v_1 = s[sea].search(problemSchedulingSimple);
 				
-				file.write(problemScheduling.getInitalFitnessValue() + "\t"); //
+				//file.write(problemScheduling.getInitalFitnessValue() + "\t"); //
 				if (fitnessValue>problemSchedulingSimple.getInitalFitnessValue()){
 					int size = tempCaseList.size()-1;
 					while (size>=0){

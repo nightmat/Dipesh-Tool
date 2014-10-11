@@ -13,6 +13,7 @@ import java.util.Random;
 import model.Consequence;
 import model.Context;
 import model.Effect;
+import model.Model;
 import model.ModelConstraint;
 import model.Priority;
 import model.Probability;
@@ -23,8 +24,8 @@ import database.DatabaseConnection;
 public class ReadTestCasesArtificialData {
 
 	public DatabaseConnection databaseConnection = new DatabaseConnection();
-	public TestCase testCase[] = new TestCase[2000];
-	private ArrayList<TestCase> testCaseList;
+	public TestCase testCase[] = new TestCase[1000];
+	private ArrayList<TestCase> testCaseList = new ArrayList<>() ;
 //	public void main(String[] args) throws Exception {
 //		readFile();
 //	}
@@ -34,10 +35,13 @@ public class ReadTestCasesArtificialData {
 		try {
 		    BufferedReader in = new BufferedReader(new FileReader("C:\\Personal\\practice\\files\\case.txt"));
 		    String str;
+		    int i=0;
 		    while ((str = in.readLine()) != null){
+		    	if (i==1000)
+		    		break;
 		    	String line = str;
 		    	String[] details = line.split("\t");
-		    	int i=0;
+		    	
 		    	testCase[i] = new TestCase();
 		    	Priority priority = new Priority();
 				Probability probability = new Probability();
@@ -46,6 +50,7 @@ public class ReadTestCasesArtificialData {
 				RCUType rcuType = new RCUType();
 				ModelConstraint modelConstraint = new ModelConstraint();
 				Effect effect = new Effect();
+				Model model = new Model();
 		    	
 		    	
 		    	testCase[i].setId(Integer.parseInt(details[0]));
@@ -74,7 +79,9 @@ public class ReadTestCasesArtificialData {
 		    	effect.setName(details[9]);
 		    	testCase[i].setEffect(effect);
 		    	
-		    	System.out.println(str);
+		    	model.setName(details[10]);
+		    	testCase[i].setModel(model);
+
 		    	i++;
 		    }
 		    in.close();
@@ -83,7 +90,7 @@ public class ReadTestCasesArtificialData {
 		
 	}
 	
-	public ArrayList<TestCase> getTestCaseContents(int caseNumber,String context, String component,String constraint, String effect){	
+	public ArrayList<TestCase> getTestCaseContents(int caseNumber,String context, String component,String constraint, String effect){
 		for (int i=0;i<caseNumber;i++){
 			if (!context.isEmpty())
 				if ((testCase[i].getContext().getName())!= context)

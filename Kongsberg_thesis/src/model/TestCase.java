@@ -14,13 +14,16 @@ public class TestCase {
 	private ModelConstraint modelConstraint;
 	private double timeExecution;
 	private Consequence consequence;
+	private Risk risk;
 	
-	private double risk;
-	public double getRisk() {
+
+	
+
+	public Risk getRisk() {
 		return risk;
 	}
 
-	public void setRisk(double risk) {
+	public void setRisk(Risk risk) {
 		this.risk = risk;
 	}
 

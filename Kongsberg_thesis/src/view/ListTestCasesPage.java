@@ -105,6 +105,11 @@ public class ListTestCasesPage {
 		initialize();		
 		setUpListeners();		
 	}
+	public void listRiskCases(String risk){
+		this.fillRiskTable(risk);
+		initialize();		
+		setUpListeners();		
+	}
 
 	public void listComponentCases(String rcutype){
 		this.fillComponentTable(rcutype);
@@ -112,6 +117,7 @@ public class ListTestCasesPage {
 		setUpListeners();		
 	}
 	
+
 	public void listModelConstraintCases(String modelconstraint){
 		this.fillModelConstraintTable(modelconstraint);
 		initialize();		
@@ -216,7 +222,17 @@ public class ListTestCasesPage {
 	
 	public void fillConsequenceTable(String consequence){
 		try{
-			this.testCaseSelectionController.showProbabiltityCases(databaseConnection, consequence);
+			this.testCaseSelectionController.showConsequenceCases(databaseConnection, consequence);
+			this.table =  new JTable(testCaseSelectionController.getData(), testCaseSelectionController.getColumnNames());	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void fillRiskTable(String risk){
+		try{
+			this.testCaseSelectionController.showRiskCases(databaseConnection, risk);
 			this.table =  new JTable(testCaseSelectionController.getData(), testCaseSelectionController.getColumnNames());	
 		}catch(Exception e){
 			e.printStackTrace();
@@ -288,6 +304,7 @@ public class ListTestCasesPage {
 		columnNames.addElement("Priority");
 		columnNames.addElement("Probability");
 		columnNames.addElement("Consequence");
+		columnNames.addElement("Risk");
 		columnNames.addElement("Execution Time");
 		columnNames.addElement("Context");
 		columnNames.addElement("Model");
@@ -304,11 +321,12 @@ public class ListTestCasesPage {
 			row.add(4, testCaseList.get(i).getPriority().getName());
 			row.add(5, testCaseList.get(i).getProbability().getName());
 			row.add(6, testCaseList.get(i).getConsequence().getName());
-			row.add(7, testCaseList.get(i).getTimeExecution());
-			row.add(8, testCaseList.get(i).getContext().getName());
-			row.add(9, testCaseList.get(i).getModel().getName());
-			row.add(10, testCaseList.get(i).getRcuType().getName());
-			row.add(11, testCaseList.get(i).getModelConstraint().getName());
+			row.add(7, testCaseList.get(i).getRisk().getName());
+			row.add(8, testCaseList.get(i).getTimeExecution());
+			row.add(9, testCaseList.get(i).getContext().getName());
+			row.add(10, testCaseList.get(i).getModel().getName());
+			row.add(11, testCaseList.get(i).getRcuType().getName());
+			row.add(12, testCaseList.get(i).getModelConstraint().getName());
 
 			
 			data.addElement(row);

@@ -174,6 +174,7 @@ public class ProblemScheduling implements Problem{
 			Priority priorityTemp = new Priority();
 			Probability probabilityTemp = new Probability();	
 			Consequence consequenceTemp = new Consequence();
+			Risk riskTemp = new Risk();
 			
 			TestCase tempCase = tempCase2.get(j);	
 			timeTemp = tempCase.getTimeExecution();
@@ -181,6 +182,7 @@ public class ProblemScheduling implements Problem{
 			priorityTemp = tempCase.getPriority();
 			probabilityTemp = tempCase.getProbability();
 			consequenceTemp = tempCase.getConsequence();
+			riskTemp = tempCase.getRisk();
 
 			
 			if (priorityTemp.getName().equalsIgnoreCase("higher")||priorityTemp.getName().equalsIgnoreCase("high")||priorityTemp.getName().equalsIgnoreCase("medium")
@@ -190,18 +192,21 @@ public class ProblemScheduling implements Problem{
 				priorityValue=0;
 			
 			if (probabilityTemp.getName().equalsIgnoreCase("high") || probabilityTemp.getName().equalsIgnoreCase("medium") || probabilityTemp.getName().equalsIgnoreCase("low"))
-			probabilityValue= convertProbability(probabilityTemp);
+				probabilityValue= convertProbability(probabilityTemp);
 			else
 				probabilityValue= 0 ;
 			
 			if (consequenceTemp.getName().equalsIgnoreCase("higher")||consequenceTemp.getName().equalsIgnoreCase("high")||consequenceTemp.getName().equalsIgnoreCase("medium")
 					||consequenceTemp.getName().equalsIgnoreCase("low")||consequenceTemp.getName().equalsIgnoreCase("lower"))
-				consequenceValue = convertConsequence(consequenceTemp);
-			
+				consequenceValue = convertConsequence(consequenceTemp);			
 			else 
 				consequenceValue =0;
 			
-			riskValue = 1- ((1-probabilityValue) + 2*(1-consequenceValue))/3;
+			if (riskTemp.getName().equalsIgnoreCase("high")||riskTemp.getName().equalsIgnoreCase("medium")||riskTemp.getName().equalsIgnoreCase("low"))
+				riskValue = convertRisk(riskTemp);
+			else 
+				riskValue =0;
+			
 			ePriorityValue = Nor(priorityValue/timeTemp);
 			eProbabilityValue = Nor(probabilityValue/timeTemp);
 			eConsequenceValue = Nor(consequenceValue/timeTemp);
@@ -287,6 +292,18 @@ public class ProblemScheduling implements Problem{
 			consequenceNum=0.2;
 		
 		return consequenceNum;
+	}
+	
+	public double convertRisk(Risk risk){
+		double riskNum=0;
+		if (risk.getName().equalsIgnoreCase("high"))
+			riskNum=1;
+		else if (risk.getName().equalsIgnoreCase("medium"))
+			riskNum=0.66;
+		else if (risk.getName().equalsIgnoreCase("low"))
+			riskNum=0.33;
+				
+		return riskNum;
 	}
 
 	// normalization function

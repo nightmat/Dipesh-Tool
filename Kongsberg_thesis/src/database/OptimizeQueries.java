@@ -20,7 +20,9 @@ public class OptimizeQueries {
 
 	List<Integer> caseNum = new ArrayList<>();
 	private TestRunResult testRunResult = new TestRunResult();
-	ArrayList<TestRunResult> testRunList = new ArrayList<TestRunResult>();
+	ArrayList<TestRunResult> testRunList = new ArrayList<TestRunResult>();	
+	String probability;
+	String consequence;
 	
 	public void getCase(DatabaseConnection databaseConnection){
 		String selectCase= "SELECT id from testcase ORDER BY id";
@@ -28,8 +30,7 @@ public class OptimizeQueries {
 		
 		try{
 			while (resultSet.next()) {
-				caseNum.add(Integer.parseInt(resultSet.getString("id")));
-			
+				caseNum.add(Integer.parseInt(resultSet.getString("id")));	
 			}
 			resultSet.close();
 		}catch(SQLException e) {			 
@@ -37,6 +38,24 @@ public class OptimizeQueries {
  
 		}
 	}
+	
+	public void getProbabilityConsequence(DatabaseConnection databaseConnection, int id){
+		String query = "SELECT probability,consequence from testcase where id = " + id;
+		
+		resultSet = databaseConnection.queryTable(query);
+		
+		try{
+			while (resultSet.next()) {
+				probability = resultSet.getString("probability");
+				consequence = resultSet.getString("consequence");		
+			}
+			resultSet.close();
+		}catch(SQLException e) {			 
+			System.out.println(e.getMessage());
+ 
+		}
+	}
+	
 	
 	
 	public void calculate(DatabaseConnection databaseConnection){
@@ -68,19 +87,87 @@ public class OptimizeQueries {
 			else if (probability<=1)
 				prob= "high";
 			
-			updateCase(databaseConnection,testRunList.get(i).getCaseId(),prob );
+			updateCaseProbability(databaseConnection,testRunList.get(i).getCaseId(),prob );
 			i++;
 		}
 		//}
-		
-	
-		
-		
+
 	}		
 	
+	public void calculateRisk(DatabaseConnection databaseConnection){
+		getCase(databaseConnection);
 	
-	public void updateCase(DatabaseConnection databaseConnection, int i, String probability){
+		int j= 0,i=0;
+		
+		while (caseNum.size()>i){
+			String risk=null;
+			getProbabilityConsequence(databaseConnection,caseNum.get(i));
+			int pass=0, fail=0, undecided=0, total=0;
+			//getRun(databaseConnection,caseNum.get(j));
+
+			risk = findRisk(probability, consequence);
+			
+			updateCaseRisk(databaseConnection,caseNum.get(i),risk );
+			i++;
+		}
+		//}
+
+	}		
+	
+	public static String findRisk(String probability, String consequence){
+		String risk = null;
+		if (probability.equalsIgnoreCase("low")){
+			switch (consequence) {
+				case "lower": risk = "low";	
+							break;
+				case "low": risk = "low";		
+							break;
+				case "medium": risk = "medium";
+							break;
+				case "high": risk = "medium";
+							break;
+				case "higher": risk = "high";
+							break;
+			}
+		}else if (probability.equalsIgnoreCase("medium")){
+			switch (consequence) {
+				case "lower": risk = "medium";	
+							break;
+				case "low": risk = "medium";
+							break;
+				case "medium": risk = "medium";
+							break;
+				case "high": risk = "medium";
+							break;
+				case "higher": risk = "high";
+							break;
+			}
+		}else if (probability.equalsIgnoreCase("high")){
+			switch (probability) {
+				case "lower": risk = "medium";	
+							break;
+				case "low": risk = "medium";	
+							break;
+				case "medium": risk = "high";	
+							break;
+				case "high": risk = "high";		
+							break;
+				case "higher": risk = "high";	
+							break;
+			}
+		}
+		return risk;
+	}
+	
+	
+	public void updateCaseProbability(DatabaseConnection databaseConnection, int i, String probability){
 		String updateQuery= "UPDATE testcase SET probability='" + probability + "' WHERE id=" + i;
+		
+		databaseConnection.insertTable(updateQuery);
+	}
+	
+	public void updateCaseRisk(DatabaseConnection databaseConnection, int i, String risk){
+		String updateQuery= "UPDATE testcase SET risk='" + risk + "' WHERE id=" + i;
 		
 		databaseConnection.insertTable(updateQuery);
 	}
