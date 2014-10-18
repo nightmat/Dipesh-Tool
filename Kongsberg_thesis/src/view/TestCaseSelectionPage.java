@@ -32,6 +32,8 @@ import database.RCUTypeQueries;
 
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -40,6 +42,7 @@ import java.awt.event.ItemEvent;
 
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 
 public class TestCaseSelectionPage {
 
@@ -61,10 +64,11 @@ public class TestCaseSelectionPage {
 	private JButton btnCancel, btnDefaultConfiguration, btnOptimizeCases, btnOptimize, btnOptimizeArtificial, btnCalculateRisk;
 	private JComboBox comboBoxEffect, comboBoxContext, comboBoxModel, comboBoxComponent, comboBoxModelConstraint;
 	private JSlider sliderPriority, sliderProbability, sliderConsequence, sliderEPriority, sliderEProbability, sliderEConsequence, sliderRisk ;
+	private JCheckBox checkboxPriority, checkBoxProbability, checkBoxConsequence, checkBoxRisk, checkBoxEPriority, checkBoxEProbabilty, checkBoxEConsequence;
 	
 	final int MIN = 0;
 	final int MAX = 100;
-	final int FPS_INIT = 15; 
+	final int FPS_INIT = 0; 
 	
 	private MainPageController mainPageController;
 	private SelectionTestCasesPage selectionTestCasesPage;
@@ -130,7 +134,7 @@ public class TestCaseSelectionPage {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 906, 687);
+		frame.setBounds(100, 100, 1212, 766);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("Test Case Selection");
@@ -154,16 +158,16 @@ public class TestCaseSelectionPage {
 		frame.getContentPane().add(lblSelectTestCases);
 		
 		JLabel label = new JLabel("Context");
-		label.setBounds(58, 465, 46, 14);
+		label.setBounds(757, 116, 46, 14);
 		frame.getContentPane().add(label);
 		
 		comboBoxContext = new JComboBox();
 		
-		comboBoxContext.setBounds(216, 462, 172, 20);
+		comboBoxContext.setBounds(956, 113, 172, 20);
 		frame.getContentPane().add(comboBoxContext);
 		
 		JLabel label_1 = new JLabel("Priority");
-		label_1.setBounds(58, 118, 46, 14);
+		label_1.setBounds(58, 116, 46, 14);
 		frame.getContentPane().add(label_1);
 		
 		JLabel label_2 = new JLabel("Probability");
@@ -171,30 +175,31 @@ public class TestCaseSelectionPage {
 		frame.getContentPane().add(label_2);
 		
 		JLabel label_3 = new JLabel("Component Under Test");
-		label_3.setBounds(474, 465, 140, 14);
+		label_3.setBounds(757, 260, 140, 14);
 		frame.getContentPane().add(label_3);
 		
 		comboBoxComponent = new JComboBox();
-		comboBoxComponent.setBounds(676, 462, 175, 20);
+		comboBoxComponent.setBounds(953, 257, 175, 20);
 		frame.getContentPane().add(comboBoxComponent);
 		
 		JLabel label_4 = new JLabel("Feature");
-		label_4.setBounds(475, 527, 97, 14);
+		label_4.setBounds(757, 341, 97, 14);
 		frame.getContentPane().add(label_4);
 		
 		comboBoxModelConstraint = new JComboBox();
-		comboBoxModelConstraint.setBounds(676, 524, 175, 20);
+		comboBoxModelConstraint.setBounds(953, 338, 175, 20);
 		frame.getContentPane().add(comboBoxModelConstraint);
 		
 		btnCancel = new JButton("Cancel");
 		
-		btnCancel.setBounds(227, 610, 120, 23);
+		btnCancel.setBounds(227, 674, 120, 23);
 		frame.getContentPane().add(btnCancel);
         Font font = new Font("Serif", Font.ITALIC, 15);
 		
 		sliderPriority = new JSlider(JSlider.HORIZONTAL,
                 MIN, MAX, FPS_INIT);
-		sliderPriority.setBounds(198, 98, 200, 77);
+		sliderPriority.setEnabled(false);
+		sliderPriority.setBounds(220, 100, 369, 77);
 		frame.getContentPane().add(sliderPriority);
 		
 		sliderPriority.setMajorTickSpacing(25);
@@ -204,10 +209,32 @@ public class TestCaseSelectionPage {
         sliderPriority.setBorder(
                 BorderFactory.createEmptyBorder(0,0,10,0));
         sliderPriority.setFont(font);
+        
+        Dictionary dictionaryPriority = new Hashtable();
+        for (int i=0; i<=100; i += 25) {  
+        	if (i/25 == 0)
+        	{
+        		dictionaryPriority.put(i, new JLabel("Very Low"));
+        	}else if (i/25 == 1)
+        	{
+        		dictionaryPriority.put(i, new JLabel("Low"));
+        	}else if (i/25 == 2)
+        	{
+        		dictionaryPriority.put(i, new JLabel("Medium"));
+        	}else if (i/25 == 3)
+        	{
+        		dictionaryPriority.put(i, new JLabel("High"));
+        	}else if (i/25 == 4)
+        	{
+        		dictionaryPriority.put(i, new JLabel("Very High"));
+        	}      
+        }
+        sliderPriority.setLabelTable(dictionaryPriority);
 		
 		sliderProbability = new JSlider(JSlider.HORIZONTAL,
                 MIN, MAX, FPS_INIT);
-		sliderProbability.setBounds(196, 165, 200, 85);
+		sliderProbability.setEnabled(false);
+		sliderProbability.setBounds(227, 165, 362, 85);
 		frame.getContentPane().add(sliderProbability);
 				
 		sliderProbability.setMajorTickSpacing(25);
@@ -217,17 +244,31 @@ public class TestCaseSelectionPage {
         sliderProbability.setBorder(
                 BorderFactory.createEmptyBorder(0,0,10,0));
         sliderProbability.setFont(font);
+        Dictionary dictionaryProbability = new Hashtable();
+        for (int i=0; i<=100; i += 50) {  
+        	if (i == 0)
+        	{
+        		dictionaryProbability.put(i, new JLabel("Low"));
+        	}else if (i/50 == 1)
+        	{
+        		dictionaryProbability.put(i, new JLabel("Medium"));
+        	}else if (i/50 == 2)
+        	{
+        		dictionaryProbability.put(i, new JLabel("High"));
+        	}          
+        }
+        sliderProbability.setLabelTable(dictionaryProbability);
         
 		btnDefaultConfiguration = new JButton("Default configuration");
-		btnDefaultConfiguration.setBounds(397, 610, 175, 23);
+		btnDefaultConfiguration.setBounds(442, 674, 175, 23);
 		frame.getContentPane().add(btnDefaultConfiguration);
 		
 		JLabel lblEffect = new JLabel("Type of Tests");
-		lblEffect.setBounds(59, 527, 127, 14);
+		lblEffect.setBounds(757, 183, 127, 14);
 		frame.getContentPane().add(lblEffect);
 		
 		comboBoxEffect = new JComboBox();
-		comboBoxEffect.setBounds(215, 524, 175, 20);
+		comboBoxEffect.setBounds(953, 180, 175, 20);
 		frame.getContentPane().add(comboBoxEffect);
 		
 		lblConsequence = new JLabel("Consequence");
@@ -236,7 +277,8 @@ public class TestCaseSelectionPage {
 		
 		sliderConsequence = new JSlider(JSlider.HORIZONTAL,
                 MIN, MAX, FPS_INIT);
-		sliderConsequence.setBounds(200, 235, 200, 96);
+		sliderConsequence.setEnabled(false);
+		sliderConsequence.setBounds(222, 235, 369, 96);
 		frame.getContentPane().add(sliderConsequence);
 		
 		sliderConsequence.setMajorTickSpacing(25);
@@ -246,74 +288,111 @@ public class TestCaseSelectionPage {
 		sliderConsequence.setBorder(
                 BorderFactory.createEmptyBorder(0,0,10,0));
 		sliderConsequence.setFont(font);
+		sliderConsequence.setLabelTable(dictionaryPriority);
 		
 		btnOptimizeCases = new JButton("Optimize cases");
 		btnOptimizeCases.setBounds(631, 426, 140, 23);
 		//frame.getContentPane().add(btnOptimizeCases);
 		
 		btnOptimize = new JButton("Optimize");
-		btnOptimize.setBounds(28, 610, 120, 23);
+		btnOptimize.setBounds(24, 674, 120, 23);
 		frame.getContentPane().add(btnOptimize);
 		
 		JLabel lblRisk = new JLabel("Risk");
-		lblRisk.setBounds(59, 340, 46, 14);
+		lblRisk.setBounds(59, 337, 46, 14);
 		frame.getContentPane().add(lblRisk);
 		
-		sliderEPriority = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 15);
+		sliderEPriority = new JSlider(SwingConstants.HORIZONTAL, MIN, MAX, FPS_INIT);
+		sliderEPriority.setEnabled(false);
 		sliderEPriority.setPaintTicks(true);
 		sliderEPriority.setPaintLabels(true);
 		sliderEPriority.setMinorTickSpacing(5);
 		sliderEPriority.setMajorTickSpacing(25);
 		sliderEPriority.setFont(new Font("Serif", Font.ITALIC, 15));
 		sliderEPriority.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
-		sliderEPriority.setBounds(651, 98, 200, 77);
+		sliderEPriority.setBounds(227, 404, 362, 77);
 		frame.getContentPane().add(sliderEPriority);
+		sliderEPriority.setLabelTable(dictionaryPriority);
 		
-		sliderEProbability = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 15);
+		sliderEProbability = new JSlider(SwingConstants.HORIZONTAL, MIN, MAX, FPS_INIT);
+		sliderEProbability.setEnabled(false);
 		sliderEProbability.setPaintTicks(true);
 		sliderEProbability.setPaintLabels(true);
 		sliderEProbability.setMinorTickSpacing(5);
 		sliderEProbability.setMajorTickSpacing(25);
 		sliderEProbability.setFont(new Font("Serif", Font.ITALIC, 15));
 		sliderEProbability.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
-		sliderEProbability.setBounds(651, 169, 200, 77);
+		sliderEProbability.setBounds(230, 492, 359, 77);
 		frame.getContentPane().add(sliderEProbability);
+		sliderEProbability.setLabelTable(dictionaryProbability);
 		
-		sliderEConsequence = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 15);
+		sliderEConsequence = new JSlider(SwingConstants.HORIZONTAL, MIN, MAX, FPS_INIT);
+		sliderEConsequence.setEnabled(false);
 		sliderEConsequence.setPaintTicks(true);
 		sliderEConsequence.setPaintLabels(true);
 		sliderEConsequence.setMinorTickSpacing(5);
 		sliderEConsequence.setMajorTickSpacing(25);
 		sliderEConsequence.setFont(new Font("Serif", Font.ITALIC, 15));
 		sliderEConsequence.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
-		sliderEConsequence.setBounds(651, 235, 200, 96);
+		sliderEConsequence.setBounds(227, 563, 362, 96);
 		frame.getContentPane().add(sliderEConsequence);
+		sliderEConsequence.setLabelTable(dictionaryPriority);
 		
 		lblEfficiencyPriority = new JLabel("Efficiency priority");
-		lblEfficiencyPriority.setBounds(475, 118, 115, 14);
+		lblEfficiencyPriority.setBounds(59, 417, 115, 14);
 		frame.getContentPane().add(lblEfficiencyPriority);
 		
 		lblEfficiencyProbability = new JLabel("Efficiency probability");
-		lblEfficiencyProbability.setBounds(475, 183, 127, 14);
+		lblEfficiencyProbability.setBounds(59, 505, 127, 14);
 		frame.getContentPane().add(lblEfficiencyProbability);
 		
 		lblEfficiencyConsequence = new JLabel("Efficiency consequence");
-		lblEfficiencyConsequence.setBounds(474, 261, 140, 14);
+		lblEfficiencyConsequence.setBounds(59, 586, 140, 14);
 		frame.getContentPane().add(lblEfficiencyConsequence);
 		
-		sliderRisk = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 15);
+		sliderRisk = new JSlider(SwingConstants.HORIZONTAL, MIN, MAX, FPS_INIT);
+		sliderRisk.setEnabled(false);
 		sliderRisk.setPaintTicks(true);
 		sliderRisk.setPaintLabels(true);
 		sliderRisk.setMinorTickSpacing(5);
 		sliderRisk.setMajorTickSpacing(25);
 		sliderRisk.setFont(new Font("Serif", Font.ITALIC, 15));
 		sliderRisk.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
-		sliderRisk.setBounds(199, 317, 200, 96);
+		sliderRisk.setBounds(227, 312, 362, 96);
 		frame.getContentPane().add(sliderRisk);
+		sliderRisk.setLabelTable(dictionaryProbability);
 		
 		btnOptimizeArtificial = new JButton("Optimize from artificial data");
-		btnOptimizeArtificial.setBounds(633, 610, 218, 23);
+		btnOptimizeArtificial.setBounds(701, 674, 218, 23);
 		frame.getContentPane().add(btnOptimizeArtificial);
+		
+		checkboxPriority = new JCheckBox("");
+		checkboxPriority.setBounds(192, 110, 38, 23);
+		frame.getContentPane().add(checkboxPriority);
+		
+		checkBoxEPriority = new JCheckBox("");
+		checkBoxEPriority.setBounds(192, 410, 38, 23);
+		frame.getContentPane().add(checkBoxEPriority);
+		
+		checkBoxProbability = new JCheckBox("");
+		checkBoxProbability.setBounds(192, 175, 38, 23);
+		frame.getContentPane().add(checkBoxProbability);
+		
+		checkBoxEProbabilty = new JCheckBox("");
+		checkBoxEProbabilty.setBounds(192, 499, 38, 23);
+		frame.getContentPane().add(checkBoxEProbabilty);
+		
+		checkBoxConsequence = new JCheckBox("");
+		checkBoxConsequence.setBounds(192, 253, 38, 23);
+		frame.getContentPane().add(checkBoxConsequence);
+		
+		checkBoxEConsequence = new JCheckBox("");
+		checkBoxEConsequence.setBounds(192, 583, 38, 23);
+		frame.getContentPane().add(checkBoxEConsequence);
+		
+		checkBoxRisk = new JCheckBox("");
+		checkBoxRisk.setBounds(192, 333, 38, 23);
+		frame.getContentPane().add(checkBoxRisk);
 		
 		btnCalculateRisk = new JButton("Calculate risk");
 		btnCalculateRisk.setBounds(274, 570, 172, 23);
@@ -321,6 +400,7 @@ public class TestCaseSelectionPage {
 		
 		
 	}
+	
 	
 	public void fillComboBoxes(){
 		
@@ -373,8 +453,98 @@ public class TestCaseSelectionPage {
 		}
 	}
 	
-	public void setUpListeners(){
 	
+	public void checkBoxListeners(){
+		checkboxPriority.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkboxPriority.isSelected())
+					sliderPriority.setEnabled(true);
+				else
+					sliderPriority.setEnabled(false);
+			}
+		});
+		
+		checkBoxProbability.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkBoxProbability.isSelected())
+					sliderProbability.setEnabled(true);
+				else
+					sliderProbability.setEnabled(false);
+			}
+		});
+		
+		checkBoxConsequence.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkBoxConsequence.isSelected())
+					sliderConsequence.setEnabled(true);
+				else
+					sliderConsequence.setEnabled(false);
+			}
+		});
+		
+		checkBoxRisk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkBoxRisk.isSelected())
+					sliderRisk.setEnabled(true);
+				else
+					sliderRisk.setEnabled(false);
+			}
+		});
+		
+		
+		checkBoxEPriority.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkBoxEPriority.isSelected())
+					sliderEPriority.setEnabled(true);
+				else
+					sliderEPriority.setEnabled(false);
+			}
+		});
+		
+		
+		checkboxPriority.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkboxPriority.isSelected())
+					sliderPriority.setEnabled(true);
+				else
+					sliderPriority.setEnabled(false);
+			}
+		});
+			
+		checkBoxEProbabilty.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkBoxEProbabilty.isSelected())
+					sliderEProbability.setEnabled(true);
+				else
+					sliderEProbability.setEnabled(false);
+			}
+		});
+		
+		checkBoxEConsequence.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(checkBoxEConsequence.isSelected())
+					sliderEConsequence.setEnabled(true);
+				else
+					sliderEConsequence.setEnabled(false);
+			}
+		});
+		
+		
+	}
+	
+	
+	public void setUpListeners(){
+		checkBoxListeners();
+		
+		
 		
 		btnOptimize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -392,13 +562,35 @@ public class TestCaseSelectionPage {
 				else
 					time = Integer.parseInt(textTime.getText());
 			//	context = sliderContext.getValue();
-				priority = sliderPriority.getValue();
-				probability = sliderProbability.getValue();
-				consequence = sliderConsequence.getValue();
-				epriority = sliderEPriority.getValue();
-				eprobability = sliderEConsequence.getValue();
-				econsequence = sliderEConsequence.getValue();
-				risk = sliderRisk.getValue();
+				if (sliderPriority.isVisible() == true)			
+					priority = sliderPriority.getValue();
+				else 
+					priority =0;
+				if (sliderProbability.isVisible() == true)	
+					probability = sliderProbability.getValue();
+				else
+					probability =0;
+				if (sliderConsequence.isVisible() == true)	
+					consequence = sliderConsequence.getValue();
+				else
+					consequence =0;
+				if (sliderRisk.isVisible() == true)	
+					risk = sliderRisk.getValue();
+				else
+					risk =0;
+				if (sliderEPriority.isVisible() == true)	
+					epriority = sliderEPriority.getValue();
+				else
+					epriority =0;
+				if (sliderEProbability.isVisible() == true)	
+					eprobability = sliderEProbability.getValue();
+				else
+					eprobability =0;
+				if (sliderEConsequence.isVisible() == true)	
+					econsequence = sliderEConsequence.getValue();
+				else
+					econsequence =0;	
+				
 				
 				double total = priority + probability + consequence + risk + epriority + eprobability + econsequence;
 				priority = priority/total;
@@ -452,13 +644,34 @@ public class TestCaseSelectionPage {
 				else
 					time = Integer.parseInt(textTime.getText());
 			//	context = sliderContext.getValue();
-				priority = sliderPriority.getValue();
-				probability = sliderProbability.getValue();
-				consequence = sliderConsequence.getValue();
-				epriority = sliderEPriority.getValue();
-				eprobability = sliderEConsequence.getValue();
-				econsequence = sliderEConsequence.getValue();
-				risk = sliderRisk.getValue();
+				if (sliderPriority.isVisible() == true)			
+					priority = sliderPriority.getValue();
+				else 
+					priority =0;
+				if (sliderProbability.isVisible() == true)	
+					probability = sliderProbability.getValue();
+				else
+					probability =0;
+				if (sliderConsequence.isVisible() == true)	
+					consequence = sliderConsequence.getValue();
+				else
+					consequence =0;
+				if (sliderRisk.isVisible() == true)	
+					risk = sliderRisk.getValue();
+				else
+					risk =0;
+				if (sliderEPriority.isVisible() == true)	
+					epriority = sliderEPriority.getValue();
+				else
+					epriority =0;
+				if (sliderEProbability.isVisible() == true)	
+					eprobability = sliderEProbability.getValue();
+				else
+					eprobability =0;
+				if (sliderEConsequence.isVisible() == true)	
+					econsequence = sliderEConsequence.getValue();
+				else
+					econsequence =0;		
 				
 				double total = priority + probability + consequence + risk + epriority + eprobability + econsequence;
 				priority = priority/total;
@@ -507,13 +720,21 @@ public class TestCaseSelectionPage {
 		btnDefaultConfiguration.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-				sliderPriority.setValue(0);
-				sliderProbability.setValue(0);
-				sliderConsequence.setValue(0);
-				sliderRisk.setValue(0);
-				sliderEPriority.setValue(0);
-				sliderEProbability.setValue(0);
-				sliderEConsequence.setValue(0);
+				sliderPriority.setEnabled(true);
+				sliderProbability.setEnabled(true);
+				sliderConsequence.setEnabled(true);
+				sliderRisk.setEnabled(true);
+				sliderEPriority.setEnabled(true);
+				sliderEProbability.setEnabled(true);
+				sliderEConsequence.setEnabled(true);
+				
+				sliderPriority.setValue(100);
+				sliderProbability.setValue(100);
+				sliderConsequence.setValue(100);
+				sliderRisk.setValue(100);
+				sliderEPriority.setValue(100);
+				sliderEProbability.setValue(100);
+				sliderEConsequence.setValue(100);
 				
 				textTime.setText("40");
 			}

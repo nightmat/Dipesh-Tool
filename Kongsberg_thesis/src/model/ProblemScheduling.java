@@ -151,22 +151,16 @@ public class ProblemScheduling implements Problem{
 		ArrayList<TestCase> tempCase2 = new ArrayList<TestCase>();
 		
 		int count =0;
-		int countTemp2=0;
-		double tempTime2=0, temptime =0,priorityValue=0, probabilityValue=0, consequenceValue =0, riskValue=0, ePriorityValue=0, eProbabilityValue=0, eConsequenceValue =0;
+		double temptime =0,priorityValue=0, probabilityValue=0, consequenceValue =0, riskValue=0, ePriorityValue=0, eProbabilityValue=0, eConsequenceValue =0;
 		double prioritySum =0, probabilitySum =0, consequenceSum =0, riskSum =0, ePrioritySum = 0, eProbabilitySum = 0, eConsequenceSum = 0;
 		double overallProbability=0, overallPriority=0, overallConsequence=0, overallRisk=0, overallEProbability=0, overallEPriority=0, overallEConsequence=0;
-			
-		HashSet<Integer> tempset = new HashSet<Integer>();
-		int k=0;
+		
 		for (int i=0;i<testCaseList.size();i++){
-			//System.out.println("Value " + i + "is " + v[i]);
-			if (tempCase2.size()!=testCaseList.size()){
-				if (v[i]==1){
-					tempset.add(i);
-					tempCase2.add(testCaseList.get(k));					
+			//System.out.println("Value " + i + "is " + v[i]);			
+				if (v[i]==1){					
+					tempCase2.add(testCaseList.get(i));					
 				}
-				k++;
-			}		
+
 		}
 		// calculating fitness function values
 		for (int j=0;j<tempCase2.size();j++){
@@ -175,8 +169,8 @@ public class ProblemScheduling implements Problem{
 			Probability probabilityTemp = new Probability();	
 			Consequence consequenceTemp = new Consequence();
 			Risk riskTemp = new Risk();
-			
-			TestCase tempCase = tempCase2.get(j);	
+			TestCase tempCase = new TestCase();
+			tempCase = tempCase2.get(j);	
 			timeTemp = tempCase.getTimeExecution();
 			temptime += timeTemp;
 			priorityTemp = tempCase.getPriority();
@@ -238,12 +232,15 @@ public class ProblemScheduling implements Problem{
 		tm =1- (priority*overallPriority + probability*overallProbability + consequence*overallConsequence + 0.3*time + risk*overallRisk +
 				epriority*overallEPriority + eprobability*overallEProbability + econsequence*overallEConsequence)/1.3;
 		
-		if (tm<0)
-			System.out.println("Good");
 		
 		if (initalFitnessValue>tm && count != 0 ){
 			initalFitnessValue=tm;
-			caseList=tempCaseList;			
+			caseList=tempCaseList;		
+			
+//			if (temptime>timeBudget)
+//				System.out.println("Error");
+//			if (temptime<=timeBudget)
+//				System.out.println("Success");
 		}		
 		counter++;
 		return tm;		
@@ -281,7 +278,7 @@ public class ProblemScheduling implements Problem{
 	public double convertConsequence(Consequence consequence){
 		double consequenceNum=0;
 		if (consequence.getName().equalsIgnoreCase("higher"))
-			consequenceNum=2;
+			consequenceNum=1;
 		else if (consequence.getName().equalsIgnoreCase("high"))
 			consequenceNum=0.8;
 		else if (consequence.getName().equalsIgnoreCase("medium"))

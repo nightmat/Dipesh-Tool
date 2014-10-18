@@ -179,7 +179,8 @@ public class ExperimentScheduling {
 		double fitnessValue=1;
 		
 		for (int sea = 0; sea < 4; sea++) {
-			for (int K = 0; K < 100; K++) {	
+			System.out.println("New starts");
+			for (int K = 0; K < 10; K++) {	
 				problemScheduling = new ProblemScheduling();
 				problemScheduling.setTestCaseList(testCaseList);
 				problemScheduling.setJobsMax(jobsMax);
@@ -194,7 +195,7 @@ public class ExperimentScheduling {
 				problemScheduling.setEconsequence(econsequence);
 				problemScheduling.setMax(counter);
 					
-				s[sea].setMaxIterations(2000);
+				s[sea].setMaxIterations(80000);
 				Search.validateConstraints(problemScheduling);
 				int[] v_1 = s[sea].search(problemScheduling);
 					
@@ -214,7 +215,16 @@ public class ExperimentScheduling {
 					}
 					tempCaseList= problemScheduling.caseList;
 					fitnessValue = problemScheduling.getInitalFitnessValue();
+					System.out.println("The name is" + s[sea].getShortName());
 					}
+				
+//				int count2 =0;
+//				for(int j=0;j<tempCaseList.size();j++){
+//				
+//					count2++;
+//					
+//				}
+				//System.out.println("Number of cases is " + count2 + "\n");
 				}			
 					//file.write(df.format(m) + "\t"); //		
 				file.write("\r");
@@ -236,8 +246,8 @@ public class ExperimentScheduling {
 		ArrayList<TestCase> tempCaseList = new ArrayList<TestCase>();
 		int counter=0;
 		double fitnessValue=1;
-		for (int sea = 0; sea < 1; sea++) {
-			for (int K = 0; K < 100; K++) {	
+		for (int sea = 2; sea < 3; sea++) {
+			for (int K = 0; K < 10; K++) {	
 				problemSchedulingSimple = new ProblemSchedulingSimple();
 			
 				problemSchedulingSimple.setTestCaseList(testCaseList);
@@ -246,7 +256,7 @@ public class ExperimentScheduling {
 				problemSchedulingSimple.setTimeBudget(maxTime);			
 				problemSchedulingSimple.calculate();
 	
-				s[sea].setMaxIterations(2000);
+				s[sea].setMaxIterations(80000);
 				Search.validateConstraints(problemSchedulingSimple);
 				int[] v_1 = s[sea].search(problemSchedulingSimple);
 				

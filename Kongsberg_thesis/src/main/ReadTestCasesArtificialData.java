@@ -18,13 +18,14 @@ import model.ModelConstraint;
 import model.Priority;
 import model.Probability;
 import model.RCUType;
+import model.Risk;
 import model.TestCase;
 import database.DatabaseConnection;
 
 public class ReadTestCasesArtificialData {
 
 	public DatabaseConnection databaseConnection = new DatabaseConnection();
-	public TestCase testCase[] = new TestCase[1000];
+	public TestCase testCase[] = new TestCase[2000];
 	private ArrayList<TestCase> testCaseList = new ArrayList<>() ;
 //	public void main(String[] args) throws Exception {
 //		readFile();
@@ -33,12 +34,12 @@ public class ReadTestCasesArtificialData {
 	
 	public void readFile(){		
 		try {
-		    BufferedReader in = new BufferedReader(new FileReader("C:\\Personal\\practice\\files\\case.txt"));
+		    BufferedReader in = new BufferedReader(new FileReader("C:\\Personal\\practice\\files\\case2000.txt"));
 		    String str;
 		    int i=0;
 		    while ((str = in.readLine()) != null){
-		    	if (i==1000)
-		    		break;
+//		    	if (i==1000)
+//		    		break;
 		    	String line = str;
 		    	String[] details = line.split("\t");
 		    	
@@ -46,6 +47,7 @@ public class ReadTestCasesArtificialData {
 		    	Priority priority = new Priority();
 				Probability probability = new Probability();
 				Consequence consequence = new Consequence();
+				Risk risk = new Risk();
 				Context context = new Context();
 				RCUType rcuType = new RCUType();
 				ModelConstraint modelConstraint = new ModelConstraint();
@@ -82,6 +84,10 @@ public class ReadTestCasesArtificialData {
 		    	model.setName(details[10]);
 		    	testCase[i].setModel(model);
 
+		    	risk.setName(details[11]);
+		    	testCase[i].setRisk(risk);
+		    	
+		    	
 		    	i++;
 		    }
 		    in.close();

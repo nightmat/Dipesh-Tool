@@ -21,7 +21,7 @@ import database.DatabaseConnection;
 public class GenerateTestCases {
 
 	public static DatabaseConnection databaseConnection = new DatabaseConnection();
-	public static TestCase testCase[] = new TestCase[2000];
+	public static TestCase testCase[] = new TestCase[400];
 	private static File fileName;
 	private static BufferedWriter file;
 	
@@ -37,9 +37,9 @@ public class GenerateTestCases {
 	}
 	
 	public static void addCase(){
-		int min=1, maxPriority =5, maxProbability =3, maxConsequence =5, maxTime=8, maxContext =2, maxComponent =5, maxConstraint =5, maxEffect =8;
+		int min=1, maxPriority =5, maxProbability =3, maxConsequence =5, maxTime=16, maxContext =2, maxComponent =5, maxConstraint =5, maxEffect =8;
 		
-		for (int i=0;i<2000;i++){
+		for (int i=0;i<400;i++){
 			Priority priority = new Priority();
 			Probability probability = new Probability();
 			Consequence consequence = new Consequence();
@@ -67,7 +67,8 @@ public class GenerateTestCases {
 			consequence.setName(proabilityConsequence);
 			testCase[i].setConsequence(consequence);
 			
-			int time = randInt (min,maxTime);
+			int num = randInt (min,maxTime);
+			double time = addTime (num);
 			testCase[i].setTimeExecution(time);
 			
 			int numContext= randInt(min,maxContext);
@@ -101,7 +102,7 @@ public class GenerateTestCases {
 		FileWriter fw = new FileWriter(fileName.getAbsoluteFile());
 		file = new BufferedWriter(fw);
 		
-		for (int i=0;i<2000;i++){
+		for (int i=0;i<400;i++){
 			file.write(i+ "\t" + testCase[i].getCaseName()+ "\t" + testCase[i].getPriority().getName()+ "\t" + testCase[i].getProbability().getName()
 					+ "\t" + testCase[i].getConsequence().getName()+ "\t" + testCase[i].getTimeExecution()+ "\t" + testCase[i].getContext().getName()+ "\t" + 
 					testCase[i].getRcuType().getName()+ "\t" + testCase[i].getModelConstraint().getName()+ "\t"  + testCase[i].getEffect().getName()+ "\t"  + 
@@ -276,7 +277,7 @@ public class GenerateTestCases {
 	
 	
 	public static void createFile() throws Exception{
-		fileName = new File("C:\\Personal\\practice\\files\\case.txt");
+		fileName = new File("C:\\Personal\\practice\\files\\case400.txt");
 		
 
 		// if file does not exists, then create it
@@ -297,6 +298,47 @@ public class GenerateTestCases {
 	    return randomNum;
 	}
 	
+	
+	public static double addTime(int number){
+		double num =0.5;
+		switch (number) {
+		case 1: num=  0.5;
+				break;
+		case 2: num=  1;
+				break;
+		case 3: num=  1.5;
+				break;
+		case 4: num=  2;
+				break;
+		case 5: num= 2.5;
+				break;
+		case 6: num=  3;
+				break;
+		case 7: num=  3.5;
+				break;
+		case 8: num=  4;
+				break;
+		case 9: num=  4.5;
+				break;
+		case 10: num=  5;
+				break;
+		case 11: num=  5.5;
+				break;
+		case 12: num=  6;
+				break;
+		case 13: num=  6.5;
+				break;
+		case 14: num=  7;
+				break;
+		case 15: num=  7.5;
+				break;
+		case 16: num=  8;
+				break;
+
+		}
+		return num;
+		
+	}
 
 	
 	

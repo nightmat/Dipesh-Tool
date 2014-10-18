@@ -3,8 +3,11 @@ package model;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import main.ReadTestCasesArtificialData;
 import database.DatabaseConnection;
@@ -16,7 +19,6 @@ public class ExperimentSchedulingArtificialData {
 
 	private DecimalFormat df;
 	private BufferedWriter file;
-	private int loopNum;
 	private ProblemScheduling problemScheduling;
 	private ProblemSchedulingSimple problemSchedulingSimple;
 	private int jobsMax;
@@ -149,7 +151,6 @@ public class ExperimentSchedulingArtificialData {
 
 	public ExperimentSchedulingArtificialData(){
 		df = new DecimalFormat("0.000");
-		loopNum = 100;
 		
 		listTestCasesPage = new ListTestCasesPage();
 		readTestCasesArtificialData = new ReadTestCasesArtificialData();
@@ -174,13 +175,16 @@ public class ExperimentSchedulingArtificialData {
 		Search[] s = new Search[] { new simula.oclga.AVM(),
 				new simula.oclga.SSGA(100, 0.75), new simula.oclga.OpOEA(),
 				new simula.oclga.RandomSearch() };
-		String[] s_name = new String[] { "AVM", "GA", "(1+1)EA", "RS" };
+		String[] s_name = new String[] { "AVM","GA","(1+1)EA","RS" };
 		ArrayList<TestCase> tempCaseList = new ArrayList<TestCase>();
 		int counter=0;
 		double fitnessValue=1;
-		
+		getTime();
 		for (int sea = 0; sea < 4; sea++) {
-			for (int K = 0; K < 100; K++) {	
+//			if (sea == 1)
+//				sea++;
+			System.out.println("New starts");
+			for (int K = 0; K < 10; K++) {					
 				problemScheduling = new ProblemScheduling();
 				problemScheduling.setTestCaseList(testCaseList);
 				problemScheduling.setJobsMax(jobsMax);
@@ -195,7 +199,7 @@ public class ExperimentSchedulingArtificialData {
 				problemScheduling.setEconsequence(econsequence);
 				problemScheduling.setMax(counter);
 					
-				s[sea].setMaxIterations(5000);
+				s[sea].setMaxIterations(20000);
 				Search.validateConstraints(problemScheduling);
 				int[] v_1 = s[sea].search(problemScheduling);
 					
@@ -208,19 +212,27 @@ public class ExperimentSchedulingArtificialData {
 					//System.out.println("counter is  is " + K+ " " +counter);
 				}
 				if (fitnessValue>problemScheduling.getInitalFitnessValue()){
-					int size = tempCaseList.size()-1;
-					while (size>=0){
-					//	System.out.println(tempCaseList.get(size).getId());
-						size--;
-					}
+					
 					tempCaseList= problemScheduling.caseList;
 					fitnessValue = problemScheduling.getInitalFitnessValue();
+					System.out.println("The name for thesis_master is " + s[sea].getShortName());
+					double time=0;
+					int count =0;
+					for(int j=0;j<tempCaseList.size();j++){
+						time +=  tempCaseList.get(j).getTimeExecution();
+						count++;
+						
 					}
-				}			
+					//	System.out.println("Time is " + time);
+					
+				}
+			}	
+			
 					//file.write(df.format(m) + "\t"); //		
 				file.write("\r");
 				file.flush();
-			}		
+		}	
+		getTime();
 		return tempCaseList;
 	}
 	
@@ -237,8 +249,9 @@ public class ExperimentSchedulingArtificialData {
 		ArrayList<TestCase> tempCaseList = new ArrayList<TestCase>();
 		int counter=0;
 		double fitnessValue=1;
-		for (int sea = 0; sea < 1; sea++) {
-			for (int K = 0; K < 30; K++) {	
+		getTime();
+		for (int sea = 0; sea < 4; sea++) {
+			for (int K = 0; K < 500; K++) {	
 				problemSchedulingSimple = new ProblemSchedulingSimple();
 			
 				problemSchedulingSimple.setTestCaseList(testCaseList);
@@ -247,17 +260,13 @@ public class ExperimentSchedulingArtificialData {
 				problemSchedulingSimple.setTimeBudget(maxTime);			
 				problemSchedulingSimple.calculate();
 	
-				s[sea].setMaxIterations(5000);
+				s[sea].setMaxIterations(120000);
 				Search.validateConstraints(problemSchedulingSimple);
 				int[] v_1 = s[sea].search(problemSchedulingSimple);
 				
 				file.write(problemScheduling.getInitalFitnessValue() + "\t"); //
 				if (fitnessValue>problemSchedulingSimple.getInitalFitnessValue()){
-					int size = tempCaseList.size()-1;
-					while (size>=0){
-					//	System.out.println(tempCaseList.get(size).getId());
-						size--;
-					}
+				
 					tempCaseList= problemSchedulingSimple.caseList;
 					fitnessValue = problemSchedulingSimple.getInitalFitnessValue();
 				}
@@ -265,7 +274,16 @@ public class ExperimentSchedulingArtificialData {
 			file.write("\r");
 			file.flush();
 		}
+		
 		return tempCaseList;
+	}
+	
+	
+	public void getTime(){
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		System.out.println(dateFormat.format(cal.getTime()));
+		
 	}
 
 	public int getJobsMin() {
@@ -316,7 +334,7 @@ public class ExperimentSchedulingArtificialData {
 
 	public void getTestCases(){
 		readTestCasesArtificialData.readFile();
-		testCaseList= readTestCasesArtificialData.getTestCaseContents(1000,context, component, constraint, effect);
+		testCaseList= readTestCasesArtificialData.getTestCaseContents(2000,context, component, constraint, effect);
 		
 		jobsMax = testCaseList.size();
 		jobsMin = 0;
