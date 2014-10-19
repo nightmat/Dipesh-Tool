@@ -25,6 +25,7 @@ public class ProblemScheduling implements Problem{
 	private String context;
 	private int jobsMin;
 	
+	private boolean timeFlag = false;
 	public double getInitalFitnessValue() {
 		return initalFitnessValue;
 	}
@@ -236,14 +237,26 @@ public class ProblemScheduling implements Problem{
 		if (initalFitnessValue>tm && count != 0 ){
 			initalFitnessValue=tm;
 			caseList=tempCaseList;		
+			if (temptime>timeBudget)
+				timeFlag=false;
+			else 
+				timeFlag= true;
 			
 //			if (temptime>timeBudget)
 //				System.out.println("Error");
 //			if (temptime<=timeBudget)
 //				System.out.println("Success");
 		}		
+		
+		if (timeFlag = true && initalFitnessValue<tm && temptime<=timeBudget){
+			initalFitnessValue=tm;
+			caseList=tempCaseList;	
+			
+		}
+			
 		counter++;
-		return tm;		
+		return tm;	
+		
 	}
 	
 	

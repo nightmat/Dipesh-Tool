@@ -195,7 +195,7 @@ public class ExperimentScheduling {
 				problemScheduling.setEconsequence(econsequence);
 				problemScheduling.setMax(counter);
 					
-				s[sea].setMaxIterations(80000);
+				s[sea].setMaxIterations(20000);
 				Search.validateConstraints(problemScheduling);
 				int[] v_1 = s[sea].search(problemScheduling);
 					

@@ -25,7 +25,7 @@ import database.DatabaseConnection;
 public class ReadTestCasesArtificialData {
 
 	public DatabaseConnection databaseConnection = new DatabaseConnection();
-	public TestCase testCase[] = new TestCase[2000];
+	public TestCase testCase[] = new TestCase[200];
 	private ArrayList<TestCase> testCaseList = new ArrayList<>() ;
 //	public void main(String[] args) throws Exception {
 //		readFile();
@@ -34,7 +34,7 @@ public class ReadTestCasesArtificialData {
 	
 	public void readFile(){		
 		try {
-		    BufferedReader in = new BufferedReader(new FileReader("C:\\Personal\\practice\\files\\case2000.txt"));
+		    BufferedReader in = new BufferedReader(new FileReader("C:\\Personal\\practice\\files\\case200.txt"));
 		    String str;
 		    int i=0;
 		    while ((str = in.readLine()) != null){
